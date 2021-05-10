@@ -22,14 +22,20 @@ class LangDictionaryService extends BaseService
 
     /**
      * 获取字典列表
+     * @param $key
+     * @param $value
      * @param $page
      * @param $limit
      * @return array
      */
-    static function getDictionaryList($page, $limit)
+    static function getDictionaryList($key, $value, $page, $limit)
     {
+        $where = [
+            ['key', 'like', '%'.$key.'%'],
+            ['value', 'like', '%'.$value.'%'],
+        ];
         $LangDictionaryModel = new LangDictionaryModel();
-        $keyArr = LangDictionaryModel::distinct(true)->page($page, $limit)->column('key');
+        $keyArr = LangDictionaryModel::where($where)->distinct(true)->page($page, $limit)->column('key');
         $list = $LangDictionaryModel->whereIn('key', $keyArr)->select()->toArray();
 
         $lang = LangModel::column('lang');
@@ -58,7 +64,7 @@ class LangDictionaryService extends BaseService
             $v['values'] = array_values($v['values']);
         }
 
-        $total_items = LangDictionaryModel::group('key')->count();
+        $total_items = LangDictionaryModel::where($where)->group('key')->count();
         $total_page = ceil($total_items / $limit);
         return self::createReturnList(true, $res, $page, $limit, $total_items, $total_page);
     }
@@ -68,9 +74,10 @@ class LangDictionaryService extends BaseService
      * @param $key
      * @param $lang
      * @param $value
+     * @param $type
      * @return array
      */
-    static function editValue($key, $lang, $value)
+    static function editValue($key, $lang, $value, $type = LangModel::TYPE_CONST)
     {
         $LangDictionaryModel = new LangDictionaryModel();
         $dictionary = $LangDictionaryModel->where([
@@ -81,7 +88,8 @@ class LangDictionaryService extends BaseService
             $res = $LangDictionaryModel->create([
                 'key' => $key,
                 'lang' => $lang,
-                'value' => $value
+                'value' => $value,
+                'type' => $type
             ]);
         }else{
             $res = $dictionary->save(['value' => $value]);
@@ -101,7 +109,7 @@ class LangDictionaryService extends BaseService
         return self::createReturn(true, $res, '删除成功');
     }
 
-    static function addDictionary($key, $values){
+    static function addDictionary($key, $values, $type = LangModel::TYPE_CONST){
         if(!$key){
             return self::createReturn(false, null, '请输入KEY');
         }
@@ -118,7 +126,8 @@ class LangDictionaryService extends BaseService
             $data[] = [
                 'lang' => $k,
                 'key' => $key,
-                'value' => $value
+                'value' => $value,
+                'type' => $type
             ];
         }
         $res = $LangDictionaryModel->saveAll($data);

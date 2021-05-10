@@ -20,7 +20,7 @@ class Test extends AdminController
 
     public function test(){
         //实例化调用
-        $this->langApi = new LangApiService('zh-cn');
+        $this->langApi = new LangApiService('zh_cn');
         echo $this->langApi->getText('test');
 
 //        $res = $this->langApi->getTextArr('test.user');

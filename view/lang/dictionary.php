@@ -5,9 +5,15 @@
             <h3>字典管理</h3>
         </div>
 
-        <el-button class="filter-item" style="margin-left: 10px;margin-bottom: 15px;" size="small" type="primary" @click="addDictionary">
-            添加数据
-        </el-button>
+        <el-button class="filter-item" style="margin-left: 10px;margin-bottom: 15px;" size="small" type="primary" @click="addDictionary">添加数据</el-button>
+
+        <div>
+            <el-input v-model="listQuery.key" placeholder="KEY" style="width: 200px;"></el-input>
+            <el-input v-model="listQuery.value" placeholder="内容" style="width: 200px;"></el-input>
+            <el-button class="filter-item" type="primary" @click="search">
+                筛选
+            </el-button>
+        </div>
 
         <el-table
             :key="tableKey"
@@ -81,7 +87,8 @@
                     page: 1,
                     limit: 10,
                     total: 0,
-                    keyword: ''
+                    key: '',
+                    value: ''
                 },
                 api_url: "{:api_url('/lang/Lang/dictionary')}",
                 allow_edit: 0
@@ -89,6 +96,11 @@
             watch: {},
             filters: {},
             methods: {
+                search: function(){
+                    var that = this;
+                    that.page = 1;
+                    that.getList();
+                },
                 getList: function () {
                     var that = this;
                     var data = that.listQuery;

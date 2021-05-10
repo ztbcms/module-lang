@@ -3,6 +3,7 @@
 namespace app\lang\controller;
 
 use app\common\controller\AdminController;
+use app\lang\model\LangModel;
 use app\lang\service\LangApiService;
 use app\lang\service\LangDictionaryService;
 use app\lang\service\LangService;
@@ -46,13 +47,15 @@ class Lang extends AdminController
         if (Request::isGet() && $_action == 'getList') {
             $page = input('get.page', 1);
             $limit = input('get.limit', 10);
-            return json(LangDictionaryService::getDictionaryList($page, $limit));
+            $key = input('get.key');
+            $value = input('get.value');
+            return json(LangDictionaryService::getDictionaryList($key, $value, $page, $limit));
         }
         if (Request::isPost() && $_action == 'editValue') {
             $key = input('post.key');
             $lang = input('post.lang');
             $value = input('post.value');
-            return json(LangDictionaryService::editValue($key, $lang, $value));
+            return json(LangDictionaryService::editValue($key, $lang, $value, LangModel::TYPE_VAR));
         }
         if (Request::isPost() && $_action == 'delDictionary') {
             $key = input('post.key');
@@ -70,7 +73,7 @@ class Lang extends AdminController
         if (Request::isPost() && $_action == 'addDictionary') {
             $key = input('post.key');
             $values = input('post.values');
-            return json(LangDictionaryService::addDictionary($key, $values));
+            return json(LangDictionaryService::addDictionary($key, $values, LangModel::TYPE_VAR));
         }
         return view('addDictionary');
     }

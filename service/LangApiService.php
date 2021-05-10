@@ -36,6 +36,10 @@ class LangApiService extends BaseService
         $this->lang = $lang;
     }
 
+    public function getLang(){
+        return $this->lang;
+    }
+
     /**
      * @param $key
      * @return mixed
@@ -67,9 +71,10 @@ class LangApiService extends BaseService
      * @param $lang
      * @param $key
      * @param $value
+     * @param $type
      * @return array
      */
-    static public function addValue($lang, $key, $value){
+    static public function addValue($lang, $key, $value, $type = LangModel::TYPE_CONST){
         $LangDictionaryModel = new LangDictionaryModel();
         $dictionary = $LangDictionaryModel->where([
             ['key', '=', $key],
@@ -79,7 +84,8 @@ class LangApiService extends BaseService
             $res = $LangDictionaryModel->create([
                 'key' => $key,
                 'lang' => $lang,
-                'value' => $value
+                'value' => $value,
+                'type' => $type
             ]);
         }else{
             $res = $dictionary->save(['value' => $value]);
@@ -99,5 +105,18 @@ class LangApiService extends BaseService
             ['lang', '=', $lang],
             ['key', '=', $key]
         ])->value('value');
+    }
+
+    /**
+     * 获取字典数据
+     * @param $key
+     * @return mixed
+     */
+    static public function getValues($key){
+        $LangDictionaryModel = new LangDictionaryModel();
+        $data = $LangDictionaryModel->where([
+            ['key', '=', $key]
+        ])->column('value', 'lang');
+        return $data ?: new \StdClass();
     }
 }

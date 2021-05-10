@@ -23,10 +23,34 @@ return [
                 "name" => "语言管理",
                 "remark" => ""
             ],[
+                "route" => "lang/admin.project/index",
+                "type" => 1,
+                "status" => 1,
+                "name" => "项目管理",
+                "remark" => ""
+            ],[
                 "route" => "lang/lang/dictionary",
                 "type" => 1,
                 "status" => 1,
                 "name" => "字典管理",
+                "remark" => ""
+            ],[
+                "route" => "lang/admin.demo/lang_switch",
+                "type" => 1,
+                "status" => 1,
+                "name" => "示例1",
+                "remark" => ""
+            ],[
+                "route" => "lang/admin.demo/fetch_lang_switch",
+                "type" => 1,
+                "status" => 1,
+                "name" => "示例2",
+                "remark" => ""
+            ],[
+                "route" => "lang/admin.demo/demo_car_list",
+                "type" => 1,
+                "status" => 1,
+                "name" => "示例3",
                 "remark" => ""
             ],
         ]
